@@ -537,7 +537,7 @@ export class PDF extends ExtendedPDF.PDF {
 
     //-- Additional information
 
-    if(this._data.additionalInformation !== undefined){
+    if(this._data.additionalInformation !== undefined || this._data.message !== undefined){
 
       this.fontSize(8);
       this.font("Helvetica-Bold");
@@ -545,11 +545,21 @@ export class PDF extends ExtendedPDF.PDF {
         width: utils.mmToPoints(87)
       });
 
-      this.fontSize(10);
-      this.font("Helvetica");
-      this.text(this._data.additionalInformation, {
-        width: utils.mmToPoints(87)
-      });
+      if (this._data.additionalInformation) {
+        this.fontSize(10);
+        this.font("Helvetica");
+        this.text(this._data.additionalInformation, {
+          width: utils.mmToPoints(87)
+        });
+      }
+      if (this._data.message) {
+        this.fontSize(10);
+        this.font("Helvetica");
+        this.text(this._data.message, {
+          width: utils.mmToPoints(87)
+        });
+      }
+
 
       this.moveDown();
 
@@ -577,7 +587,21 @@ export class PDF extends ExtendedPDF.PDF {
         width: utils.mmToPoints(87)
       });
 
-      const posY = this._data.reference === undefined ? 34 : 45;
+      let posY = 34
+      if (this._data.reference !== undefined) {
+        posY += 11
+      }
+
+      // the title line from message / additionalInformation
+      if (this._data.message !== undefined || this._data.additionalInformation !== undefined) {
+        posY += 5
+      }
+      if (this._data.message !== undefined) {
+        posY += 6
+      }
+      if (this._data.additionalInformation !== undefined) {
+        posY += 6
+      }
 
       this._drawRectangle(118, posY, 65, 25);
 
